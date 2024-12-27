@@ -1,0 +1,21 @@
+.revenueDashboard
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-right: 10px;
+    background-color: #fff;
+    border-radius: 7px;
+}
+
+.revenueDashboard img
+{
+    margin-top: 20px;
+}
+
+.revenueDashboard p
+{
+    margin-top: 10px;
+}

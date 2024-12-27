@@ -197,3 +197,10 @@ a.secondary
   gap: 32px;
   grid-row-start: 2;
 }
+
+.initialContent
+{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 3
+}
