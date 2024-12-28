@@ -7,7 +7,6 @@ import SellsAndStock from '@/components/sellsAndStock';
 export default function Home() {
 	return (
 		<div className={styles.page}>
-			<NavBar />
 			<div className={styles.contentMain}>
 				<UserPanel />
 				<div className={styles.initialContent}>
