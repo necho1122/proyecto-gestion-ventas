@@ -1,7 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
 import styles from './UserPanel.module.css';
-import { Sell, Productos, Clients, Suppliers, Inventory } from './Icons';
+import {
+	Sell,
+	Productos,
+	Clients,
+	Suppliers,
+	Inventory,
+	Services,
+} from './Icons';
 
 function UserPanel() {
 	return (
@@ -14,13 +21,16 @@ function UserPanel() {
 				<Productos />
 				Productos
 			</Link>
-			<Link href='/clientes'>
+			<Link href='/customers'>
 				<Clients /> Clientes
 			</Link>
-			<Link href='/proveedores'>
+			<Link href='/services'>
+				<Services /> Servicios
+			</Link>
+			<Link href='/suppliers'>
 				<Suppliers /> Proveedores
 			</Link>
-			<Link href='/proveedores'>
+			<Link href='/sell-stock/stock'>
 				<Inventory />
 				Inventario
 			</Link>

@@ -1,0 +1,31 @@
+.toSellContainer
+{
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.productsToSellContainer
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 10px;
+
+}
+
+.toSellContainer h1
+{
+    text-align: center;
+    margin: 40px;
+}
+
+.productsToSellContainer a
+{
+    text-decoration: none;
+    color: black;
+    background-color: #f8f9fa;
+    height: 90px;
+}

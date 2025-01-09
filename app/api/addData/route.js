@@ -1,41 +1,41 @@
-// pages/api/addData.js
 import { db } from '@/lib/firebase';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 
-export default async function handler(req, res) {
-	if (req.method === 'POST') {
-		const { producto, cantidad, precioUnitario } = req.body;
+export async function POST(request) {
+	try {
+		const body = await request.json();
 
-		if (!producto || !cantidad || !precioUnitario) {
-			return res.status(400).json({ error: 'Todos los campos son requeridos' });
-		}
+		// Obtener el número total de documentos existentes para asignar el ID
+		const collectionRef = collection(db, 'stocks');
+		const snapshot = await getDocs(collectionRef);
+		const totalDocs = snapshot.size;
+		const newId = totalDocs + 1;
 
-		try {
-			// Referencia a la colección
-			const ventasCollection = collection(db, 'ventas');
+		// Agregar el nuevo documento a Firestore
+		const docRef = await addDoc(collectionRef, {
+			id: newId,
+			producto: body.producto,
+			cantidad: body.cantidad,
+			precioUnitario: body.precioUnitario,
+		});
 
-			// Obtener todos los documentos en la colección
-			const snapshot = await getDocs(ventasCollection);
+		console.log('Venta agregada con ID:', docRef.id);
 
-			// Determinar el próximo ID
-			const nextId = snapshot.size + 1;
-
-			// Agregar nuevo documento con el ID calculado
-			const docRef = await addDoc(ventasCollection, {
-				id: nextId.toString(),
-				producto,
-				cantidad,
-				precioUnitario,
-			});
-
-			return res
-				.status(200)
-				.json({ message: 'Datos agregados', id: docRef.id });
-		} catch (error) {
-			console.error('Error al agregar los datos:', error);
-			return res.status(500).json({ error: 'Error al agregar los datos' });
-		}
-	} else {
-		return res.status(405).json({ error: 'Método no permitido' });
+		return new Response(
+			JSON.stringify({ message: 'Venta agregada con éxito.' }),
+			{
+				status: 201,
+				headers: { 'Content-Type': 'application/json' },
+			}
+		);
+	} catch (error) {
+		console.error('Error al procesar la solicitud:', error);
+		return new Response(
+			JSON.stringify({ error: 'Error al agregar la venta' }),
+			{
+				status: 500,
+				headers: { 'Content-Type': 'application/json' },
+			}
+		);
 	}
 }
