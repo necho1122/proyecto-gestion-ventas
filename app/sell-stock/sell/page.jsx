@@ -31,6 +31,7 @@ function SellStockPage() {
 					</div>
 				))}
 			</div>
+			<button>Ir a la lista de compras</button>
 		</div>
 	);
 }

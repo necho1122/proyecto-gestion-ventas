@@ -1,6 +1,7 @@
 import React from 'react';
 import { products } from '@/utils/products';
 import styles from './page.module.css';
+import Link from 'next/link';
 
 function ProductPage({ params }) {
 	// Encuentra el producto basado en el ID proporcionado
@@ -18,8 +19,10 @@ function ProductPage({ params }) {
 			<div className={styles.itemQuantity}>
 				<p>Precio unitario: ${product.precioUnitario}</p>
 				<button>+</button>
+				<button>-</button>
 			</div>
 			<button>Agregar</button>
+			<Link href='/sell-stock/sell'>Volver</Link>
 		</div>
 	);
 }
