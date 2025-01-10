@@ -3,7 +3,7 @@ import { collection, getDocs } from 'firebase/firestore';
 
 export async function GET(request) {
 	try {
-		const collectionRef = collection(db, 'ventas');
+		const collectionRef = collection(db, 'stocks');
 		const snapshot = await getDocs(collectionRef);
 		const ventas = snapshot.docs.map((doc) => ({
 			id: doc.id, // Incluye el ID del documento
