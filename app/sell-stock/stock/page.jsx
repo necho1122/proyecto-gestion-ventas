@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import styles from './page.module.css';
 
-function page() {
+function Page() {
 	const [ventas, setVentas] = useState([]); // Define el estado en el componente
 
 	const obtenerVentas = async () => {
@@ -21,14 +21,15 @@ function page() {
 	}, []);
 
 	return (
-		<div className={styles.productsContainer}>
-			<h1>Lista de Inventario</h1>
-			<table>
+		<div className={styles.container}>
+			<h1 className={styles.heading}>Lista de Inventario</h1>
+			<table className={styles.table}>
 				<thead>
 					<tr>
 						<th>Producto</th>
 						<th>Cantidad</th>
 						<th>Precio Unitario</th>
+						<th>Acción</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -36,7 +37,10 @@ function page() {
 						<tr key={index}>
 							<td>{product.producto}</td>
 							<td>{product.cantidad}</td>
-							<td>{product.precioUnitario}</td>
+							<td>${product.precioUnitario}</td>
+							<td>
+								<button className={styles.actionButton}>Acción</button>
+							</td>
 						</tr>
 					))}
 				</tbody>
@@ -45,4 +49,4 @@ function page() {
 	);
 }
 
-export default page;
+export default Page;

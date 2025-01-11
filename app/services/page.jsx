@@ -2,28 +2,28 @@
 import { useState, useEffect } from 'react';
 import styles from './page.module.css';
 
-function page() {
-	const [services, setServices] = useState([]); // Define el estado en el componente
+function Page() {
+	const [services, setServices] = useState([]);
 
-	const obtenerVentas = async () => {
+	const obtenerServicios = async () => {
 		try {
 			const response = await fetch('/api/getServices', { method: 'GET' });
-			if (!response.ok) throw new Error('Error al obtener las ventas');
+			if (!response.ok) throw new Error('Error al obtener los servicios');
 			const data = await response.json();
-			setServices(data); // Actualiza el estado con los datos obtenidos
+			setServices(data);
 		} catch (error) {
 			console.error(error.message);
 		}
 	};
 
 	useEffect(() => {
-		obtenerVentas();
+		obtenerServicios();
 	}, []);
 
 	return (
 		<div className={styles.serviceContainer}>
 			<h1>Servicios</h1>
-			<table>
+			<table className={styles.table}>
 				<thead>
 					<tr>
 						<th>Servicio</th>
@@ -31,16 +31,21 @@ function page() {
 					</tr>
 				</thead>
 				<tbody>
-					{services.map((service, index) => (
-						<tr key={index}>
-							<td>{service.servicio}</td>
-							<td>{service.precio}</td>
-						</tr>
-					))}
+					{services.map((service, index) => {
+						// Verificar y convertir precio a número
+						const precio = parseFloat(service.precio) || 0;
+
+						return (
+							<tr key={index}>
+								<td>{service.servicio}</td>
+								<td>${precio.toFixed(2)}</td>
+							</tr>
+						);
+					})}
 				</tbody>
 			</table>
 		</div>
 	);
 }
 
-export default page;
+export default Page;

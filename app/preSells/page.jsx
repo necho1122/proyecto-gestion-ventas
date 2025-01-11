@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { useListaCompras } from '@/context/sellsContext';
+import styles from './page.module.css';
 
-const ListaCompras = () => {
+function ListaCompras() {
 	const { listaCompras, eliminarProducto, limpiarLista } = useListaCompras();
 
 	// Función para procesar la compra
@@ -41,28 +42,53 @@ const ListaCompras = () => {
 	}
 
 	return (
-		<div>
-			<h2>Lista de Compras</h2>
-			<ul>
-				{listaCompras.map((producto, index) => (
-					<li key={index}>
-						{producto.nombre} - Cantidad: {producto.cantidad} - Precio Unitario:
-						${producto.precioUnitario} - Precio Total: ${producto.precioTotal}
-						<button onClick={() => eliminarProducto(index)}>Eliminar</button>
-					</li>
-				))}
-			</ul>
-			<div style={{ marginTop: '10px' }}>
+		<div className={styles.container}>
+			<h2 className={styles.heading}>Lista de Compras</h2>
+			<table className={styles.table}>
+				<thead>
+					<tr>
+						<th>Producto</th>
+						<th>Cantidad</th>
+						<th>Precio Unitario</th>
+						<th>Precio Total</th>
+						<th>Acción</th>
+					</tr>
+				</thead>
+				<tbody>
+					{listaCompras.map((producto, index) => (
+						<tr key={index}>
+							<td>{producto.nombre}</td>
+							<td>{producto.cantidad}</td>
+							<td>${producto.precioUnitario}</td>
+							<td>${producto.precioTotal}</td>
+							<td>
+								<button
+									className={styles.deleteButton}
+									onClick={() => eliminarProducto(index)}
+								>
+									Eliminar
+								</button>
+							</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+			<div className={styles.actions}>
 				<button
+					className={`${styles.button} ${styles.clearButton}`}
 					onClick={limpiarLista}
-					style={{ marginRight: '10px' }}
 				>
 					Limpiar Lista
 				</button>
-				<button onClick={procesarCompra}>Procesar Compra</button>
+				<button
+					className={`${styles.button} ${styles.processButton}`}
+					onClick={procesarCompra}
+				>
+					Procesar Compra
+				</button>
 			</div>
 		</div>
 	);
-};
+}
 
 export default ListaCompras;

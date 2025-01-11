@@ -21,9 +21,9 @@ function Page() {
 	}, []);
 
 	return (
-		<div className={styles.productsContainer}>
-			<h1>Control de ventas</h1>
-			<table>
+		<div className={styles.container}>
+			<h1 className={styles.heading}>Control de Ventas</h1>
+			<table className={styles.table}>
 				<thead>
 					<tr>
 						<th>Producto</th>
@@ -45,11 +45,11 @@ function Page() {
 							<tr key={index}>
 								<td>{product.nombre}</td>
 								<td>{product.cantidad}</td>
-								<td>{product.precioUnitario}</td>
-								<td>{product.precioTotal}</td>
+								<td>${product.precioUnitario}</td>
+								<td>${product.precioTotal}</td>
 								<td>{fechaFormateada}</td> {/* Mostrar la fecha formateada */}
 								<td>
-									<button>Acción</button>
+									<button className={styles.actionButton}>Acción</button>
 								</td>
 							</tr>
 						);

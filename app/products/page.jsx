@@ -2,28 +2,28 @@
 import { useState, useEffect } from 'react';
 import styles from './page.module.css';
 
-function page() {
-	const [ventas, setVentas] = useState([]); // Define el estado en el componente
+function Page() {
+	const [productos, setProductos] = useState([]);
 
-	const obtenerVentas = async () => {
+	const obtenerProductos = async () => {
 		try {
 			const response = await fetch('/api/getStocksData', { method: 'GET' });
-			if (!response.ok) throw new Error('Error al obtener las ventas');
+			if (!response.ok) throw new Error('Error al obtener los productos');
 			const data = await response.json();
-			setVentas(data); // Actualiza el estado con los datos obtenidos
+			setProductos(data); // Actualiza el estado con los datos obtenidos
 		} catch (error) {
 			console.error(error.message);
 		}
 	};
 
 	useEffect(() => {
-		obtenerVentas();
+		obtenerProductos();
 	}, []);
 
 	return (
 		<div className={styles.productsContainer}>
 			<h1>Nuestros Productos</h1>
-			<table>
+			<table className={styles.table}>
 				<thead>
 					<tr>
 						<th>Producto</th>
@@ -31,16 +31,21 @@ function page() {
 					</tr>
 				</thead>
 				<tbody>
-					{ventas.map((product, index) => (
-						<tr key={index}>
-							<td>{product.producto}</td>
-							<td>{product.precioUnitario}</td>
-						</tr>
-					))}
+					{productos.map((product, index) => {
+						// Verificar y convertir precioUnitario a número
+						const precioUnitario = parseFloat(product.precioUnitario) || 0;
+
+						return (
+							<tr key={index}>
+								<td>{product.producto}</td>
+								<td>${precioUnitario.toFixed(2)}</td>
+							</tr>
+						);
+					})}
 				</tbody>
 			</table>
 		</div>
 	);
 }
 
-export default page;
+export default Page;
