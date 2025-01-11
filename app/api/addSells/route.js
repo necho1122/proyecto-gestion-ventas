@@ -14,11 +14,11 @@ export async function POST(request) {
 		// Agregar el nuevo documento a Firestore
 		const docRef = await addDoc(collectionRef, {
 			id: newId,
-			producto: body.producto,
+			nombre: body.nombre,
 			cantidad: body.cantidad,
 			precioUnitario: body.precioUnitario,
 			precioTotal: body.precioTotal,
-			fecha: body.fecha,
+			fecha: new Date().toISOString(),
 		});
 
 		console.log('Venta agregada con ID:', docRef.id);

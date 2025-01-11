@@ -1,9 +1,26 @@
+'use client';
 import React from 'react';
-import { products } from '@/utils/products';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './page.module.css';
 
 function SellStockPage() {
+	const [ventas, setVentas] = useState([]); // Define el estado en el componente
+
+	const obtenerVentas = async () => {
+		try {
+			const response = await fetch('/api/getStocksData', { method: 'GET' });
+			if (!response.ok) throw new Error('Error al obtener las ventas');
+			const data = await response.json();
+			setVentas(data); // Actualiza el estado con los datos obtenidos
+		} catch (error) {
+			console.error(error.message);
+		}
+	};
+
+	useEffect(() => {
+		obtenerVentas();
+	}, []);
 	// Lista de colores de fondo
 	const colors = ['lightcoral', 'lightblue', 'lightgreen'];
 
@@ -11,7 +28,7 @@ function SellStockPage() {
 		<div className={styles.toSellContainer}>
 			<h1>Productos a la venta</h1>
 			<div className={styles.productsToSellContainer}>
-				{products.map((product, index) => (
+				{ventas.map((product, index) => (
 					<div key={index}>
 						<Link
 							href={`/sell-stock/sell/${product.id}`}
@@ -31,7 +48,7 @@ function SellStockPage() {
 					</div>
 				))}
 			</div>
-			<button>Ir a la lista de compras</button>
+			<Link href='/preSells'>Ir a la lista</Link>
 		</div>
 	);
 }

@@ -1,5 +1,4 @@
 import styles from './page.module.css';
-import NavBar from '@/components/NavBar';
 import UserPanel from '@/components/UserPanel';
 import RevenueDashboard from '@/components/RevenueDashboard';
 import SellsAndStock from '@/components/sellsAndStock';
