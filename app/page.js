@@ -1,7 +1,7 @@
 import styles from './page.module.css';
 import UserPanel from '@/components/UserPanel';
 import RevenueDashboard from '@/components/RevenueDashboard';
-import SellsAndStock from '@/components/sellsAndStock';
+import SellsAndStock from '@/components/SellsAndStock';
 
 export default function Home() {
 	return (
