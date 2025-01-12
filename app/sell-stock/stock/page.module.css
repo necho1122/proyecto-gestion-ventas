@@ -56,7 +56,8 @@
     font-weight: bold;
 }
 
-.actionButton
+.actionButton,
+.addButton
 {
     background-color: #2196f3;
     color: white;

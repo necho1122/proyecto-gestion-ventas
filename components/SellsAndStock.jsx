@@ -1,11 +1,29 @@
+'use client';
 import React from 'react';
 import styles from './SellsAndStock.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { products } from '@/utils/products';
+import { useEffect, useState } from 'react';
 
 function sellsAndStock() {
-	const ventas = products.slice(0, 6);
+	const [ventas, setVentas] = useState([]); // Define el estado en el componente
+
+	const obtenerVentas = async () => {
+		try {
+			const response = await fetch('/api/getSellsData', { method: 'GET' });
+			if (!response.ok) throw new Error('Error al obtener las ventas');
+			const data = await response.json();
+			setVentas(data); // Actualiza el estado con los datos obtenidos
+		} catch (error) {
+			console.error(error.message);
+		}
+	};
+
+	useEffect(() => {
+		obtenerVentas();
+	}, []);
+
+	const ventasSlice = ventas.slice(0, 6);
 
 	return (
 		<div className={styles.sellsAndStock}>
@@ -20,7 +38,7 @@ function sellsAndStock() {
 			<div>
 				<h3>Ventas recientes</h3>
 				<ul>
-					{ventas.map((venta, index) => (
+					{ventasSlice.map((venta, index) => (
 						<li key={index}>
 							<Image
 								src='https://cdn-icons-png.flaticon.com/512/8221/8221097.png'
@@ -28,7 +46,7 @@ function sellsAndStock() {
 								width={20}
 								height={20}
 							/>{' '}
-							<span>{venta.producto}</span>
+							<span>{venta.nombre}</span>
 						</li>
 					))}
 				</ul>

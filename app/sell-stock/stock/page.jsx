@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import styles from './page.module.css';
+import Link from 'next/link';
 
 function Page() {
 	const [ventas, setVentas] = useState([]); // Define el estado en el componente
@@ -22,7 +23,12 @@ function Page() {
 
 	return (
 		<div className={styles.container}>
-			<h1 className={styles.heading}>Lista de Inventario</h1>
+			<div>
+				<h1 className={styles.heading}>Lista de Inventario</h1>
+				<Link href='/addItem'>
+					<button className={styles.addButton}>Agregar nuevo producto</button>
+				</Link>
+			</div>
 			<table className={styles.table}>
 				<thead>
 					<tr>

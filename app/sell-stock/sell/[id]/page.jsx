@@ -81,21 +81,51 @@ function ProductPage({ params }) {
 
 	return (
 		<div className={styles.itemContainer}>
-			<h1>Detalles del Producto</h1>
-			<h3>Producto: {product.producto}</h3>
+			<h1 className={styles.title}>Detalles del Producto</h1>
+			<h3 className={styles.productName}>
+				Producto: <span>{product.producto}</span>
+			</h3>
 			<div className={styles.itemQuantity}>
-				<p>Precio unitario: ${parseFloat(product.precioUnitario).toFixed(2)}</p>
-				<div>
-					<button onClick={decrementarCantidad}>-</button>
-					<span>{cantidad}</span>
-					<button onClick={incrementarCantidad}>+</button>
+				<p className={styles.price}>
+					Precio unitario:{' '}
+					<span>${parseFloat(product.precioUnitario).toFixed(2)}</span>
+				</p>
+				<div className={styles.quantityControl}>
+					<button
+						className={styles.decrementButton}
+						onClick={decrementarCantidad}
+					>
+						-
+					</button>
+					<span className={styles.quantity}>{cantidad}</span>
+					<button
+						className={styles.incrementButton}
+						onClick={incrementarCantidad}
+					>
+						+
+					</button>
 				</div>
 			</div>
-			<button onClick={handleAgregarProducto}>
+			<button
+				className={styles.addButton}
+				onClick={handleAgregarProducto}
+			>
 				Agregar a la lista de compras
 			</button>
-			<Link href='/sell-stock/sell'>Volver</Link>
-			<Link href='/preSells'>Ir a lista</Link>
+			<div className={styles.linkContainer}>
+				<Link
+					href='/sell-stock/sell'
+					className={styles.link}
+				>
+					Volver
+				</Link>
+				<Link
+					href='/preSells'
+					className={styles.link}
+				>
+					Ir a lista
+				</Link>
+			</div>
 		</div>
 	);
 }

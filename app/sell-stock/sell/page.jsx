@@ -21,34 +21,42 @@ function SellStockPage() {
 	useEffect(() => {
 		obtenerVentas();
 	}, []);
+
 	// Lista de colores de fondo
 	const colors = ['lightcoral', 'lightblue', 'lightgreen'];
 
 	return (
 		<div className={styles.toSellContainer}>
-			<h1>Productos a la venta</h1>
+			<h1 className={styles.title}>Productos a la Venta</h1>
 			<div className={styles.productsToSellContainer}>
 				{ventas.map((product, index) => (
 					<div key={index}>
 						<Link
 							href={`/sell-stock/sell/${product.id}`}
-							style={{
-								backgroundColor: colors[index % colors.length],
-								padding: '10px',
-								borderRadius: '5px',
-								textDecoration: 'none',
-								display: 'block',
-							}}
+							className={styles.productLink}
 						>
-							<div className={styles.productToSell}>
-								<h4>{product.producto}</h4>
-								<p>Precio unitario: ${product.precioUnitario}</p>
+							<div
+								className={styles.productToSell}
+								style={{ backgroundColor: colors[index % colors.length] }}
+							>
+								<h4 className={styles.productName}>{product.producto}</h4>
+								<p className={styles.productPrice}>
+									Precio unitario:{' '}
+									<strong>
+										${parseFloat(product.precioUnitario).toFixed(2)}
+									</strong>
+								</p>
 							</div>
 						</Link>
 					</div>
 				))}
 			</div>
-			<Link href='/preSells'>Ir a la lista</Link>
+			<Link
+				href='/preSells'
+				className={styles.backButton}
+			>
+				Ir a la lista
+			</Link>
 		</div>
 	);
 }
