@@ -1,30 +1,25 @@
 import { db } from '@/lib/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 
-export async function PATCH(request) {
+export async function PUT(request) {
 	try {
 		const body = await request.json();
-		const { id, ...nuevosDatos } = body; // Asume que el ID y los datos a actualizar están en el cuerpo de la solicitud.
+		const { id, producto, cantidad, precioUnitario } = body;
 
-		// Validar que el ID está presente
-		if (!id) {
-			return new Response(
-				JSON.stringify({ error: 'El ID del documento es obligatorio' }),
-				{
-					status: 400,
-					headers: { 'Content-Type': 'application/json' },
-				}
-			);
-		}
+		// Obtener referencia al documento que se quiere actualizar
+		const docRef = doc(db, 'stocks', id);
 
-		// Referencia al documento específico
-		const docRef = doc(db, 'ventas', id);
+		// Actualizar el documento en Firestore
+		await updateDoc(docRef, {
+			producto,
+			cantidad,
+			precioUnitario,
+		});
 
-		// Actualizar los datos
-		await updateDoc(docRef, nuevosDatos);
+		console.log('Producto actualizado con ID:', id);
 
 		return new Response(
-			JSON.stringify({ message: 'Venta actualizada con éxito.' }),
+			JSON.stringify({ message: 'Producto actualizado con éxito.' }),
 			{
 				status: 200,
 				headers: { 'Content-Type': 'application/json' },
@@ -33,7 +28,7 @@ export async function PATCH(request) {
 	} catch (error) {
 		console.error('Error al procesar la solicitud:', error);
 		return new Response(
-			JSON.stringify({ error: 'Error al actualizar la venta' }),
+			JSON.stringify({ error: 'Error al actualizar el producto' }),
 			{
 				status: 500,
 				headers: { 'Content-Type': 'application/json' },

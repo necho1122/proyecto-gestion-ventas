@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import styles from './page.module.css';
+import Link from 'next/link';
 
 async function agregarVenta(venta) {
 	try {
@@ -83,6 +84,16 @@ function AddVentaComponent() {
 					/>
 				</div>
 				<button onClick={handleAddVenta}>Agregar Venta</button>
+				<Link href='/sell-stock/stock'>
+					<button
+						style={{
+							backgroundColor: '#2196F3',
+							color: 'white',
+						}}
+					>
+						Volver
+					</button>
+				</Link>
 			</div>
 		</div>
 	);

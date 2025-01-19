@@ -1,27 +1,27 @@
+// /api/getStocksData/route.js
 import { db } from '@/lib/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
-export async function GET(request) {
+export async function GET() {
 	try {
 		const collectionRef = collection(db, 'stocks');
 		const snapshot = await getDocs(collectionRef);
-		const ventas = snapshot.docs.map((doc) => ({
-			id: doc.id, // Incluye el ID del documento
-			...doc.data(), // Incluye los datos del documento
+
+		// Agregar el ID del documento a los datos
+		const data = snapshot.docs.map((doc) => ({
+			id: doc.id, // Incluye el ID de Firestore
+			...doc.data(),
 		}));
 
-		return new Response(JSON.stringify(ventas), {
+		return new Response(JSON.stringify(data), {
 			status: 200,
 			headers: { 'Content-Type': 'application/json' },
 		});
 	} catch (error) {
-		console.error('Error al obtener las ventas:', error);
-		return new Response(
-			JSON.stringify({ error: 'Error al obtener las ventas' }),
-			{
-				status: 500,
-				headers: { 'Content-Type': 'application/json' },
-			}
-		);
+		console.error('Error obteniendo datos:', error);
+		return new Response(JSON.stringify({ error: 'Error al obtener datos' }), {
+			status: 500,
+			headers: { 'Content-Type': 'application/json' },
+		});
 	}
 }
