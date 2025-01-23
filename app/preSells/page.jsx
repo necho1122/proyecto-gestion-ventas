@@ -15,18 +15,22 @@ function ListaCompras() {
 		}
 
 		try {
-			for (const producto of listaCompras) {
-				console.log('Enviando producto:', producto); // Depuración
-				const response = await fetch('/api/addSells', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(producto),
-				});
+			// Crear un objeto que agrupe toda la lista de compras
+			const compra = {
+				fecha: new Date().toISOString(),
+				productos: listaCompras,
+			};
 
-				if (!response.ok) {
-					const errorData = await response.json();
-					throw new Error(errorData.error || 'Error al procesar la compra');
-				}
+			// Enviar el objeto completo a la API
+			const response = await fetch('/api/addSells', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(compra),
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json();
+				throw new Error(errorData.error || 'Error al procesar la compra');
 			}
 
 			alert('Compra procesada con éxito.');

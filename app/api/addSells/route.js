@@ -5,22 +5,19 @@ export async function POST(request) {
 	try {
 		const body = await request.json();
 
-		// Agregar el nuevo documento a Firestore
+		// Crear un nuevo documento que contiene toda la lista de compras
 		const collectionRef = collection(db, 'sells');
 		const docRef = await addDoc(collectionRef, {
-			nombre: body.nombre,
-			cantidad: body.cantidad,
-			precioUnitario: body.precioUnitario,
-			precioTotal: body.precioTotal,
-			fecha: new Date().toISOString(),
+			fecha: new Date().toISOString(), // Fecha única para la lista
+			productos: body.productos, // Lista de productos anidada
 		});
 
-		console.log('Venta agregada con ID:', docRef.id);
+		console.log('Lista de compras agregada con ID:', docRef.id);
 
 		return new Response(
 			JSON.stringify({
-				message: 'Venta agregada con éxito.',
-				id: docRef.id, // Retornar el ID generado automáticamente si es necesario
+				message: 'Lista de compras agregada con éxito.',
+				id: docRef.id,
 			}),
 			{
 				status: 201,
@@ -30,7 +27,7 @@ export async function POST(request) {
 	} catch (error) {
 		console.error('Error al procesar la solicitud:', error);
 		return new Response(
-			JSON.stringify({ error: 'Error al agregar la venta' }),
+			JSON.stringify({ error: 'Error al agregar la lista de compras' }),
 			{
 				status: 500,
 				headers: { 'Content-Type': 'application/json' },

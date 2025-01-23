@@ -1,8 +1,7 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './RevenueDashboard.module.css';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 
 function RevenueDashboard() {
 	const [ventas, setVentas] = useState([]); // Define el estado en el componente
@@ -22,10 +21,14 @@ function RevenueDashboard() {
 		obtenerVentas();
 	}, []);
 
-	const sumaPrecioTotal = ventas.reduce(
-		(acumulador, ventas) => acumulador + parseFloat(ventas.precioTotal),
-		0
-	);
+	// Sumar el precio total de cada venta
+	const sumaPrecioTotal = ventas.reduce((acumulador, venta) => {
+		// Sumar el precio total de todos los productos dentro de una venta
+		const totalVenta = venta.productos.reduce((total, producto) => {
+			return total + parseFloat(producto.precioTotal);
+		}, 0);
+		return acumulador + totalVenta;
+	}, 0);
 
 	return (
 		<div className={styles.revenueDashboard}>

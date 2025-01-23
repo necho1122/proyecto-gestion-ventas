@@ -1,9 +1,8 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './SellsAndStock.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 
 function sellsAndStock() {
 	const [ventas, setVentas] = useState([]); // Define el estado en el componente
@@ -23,6 +22,7 @@ function sellsAndStock() {
 		obtenerVentas();
 	}, []);
 
+	// Seleccionamos las últimas 6 ventas y los productos dentro de esas ventas
 	const ventasSlice = ventas.slice(0, 6);
 
 	return (
@@ -38,17 +38,21 @@ function sellsAndStock() {
 			<div>
 				<h3>Ventas recientes</h3>
 				<ul>
-					{ventasSlice.map((venta, index) => (
-						<li key={index}>
-							<Image
-								src='https://cdn-icons-png.flaticon.com/512/8221/8221097.png'
-								alt='Venta'
-								width={20}
-								height={20}
-							/>{' '}
-							<span>{venta.nombre}</span>
-						</li>
-					))}
+					{ventasSlice.map((venta, index) =>
+						// Iteramos sobre los productos de cada venta
+						venta.productos.map((producto, prodIndex) => (
+							<li key={`${index}-${prodIndex}`}>
+								<Image
+									src='https://cdn-icons-png.flaticon.com/512/8221/8221097.png'
+									alt='Venta'
+									width={20}
+									height={20}
+								/>
+								<span>{producto.nombre}</span>{' '}
+								{/* Mostrar el nombre del producto */}
+							</li>
+						))
+					)}
 				</ul>
 			</div>
 		</div>
