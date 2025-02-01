@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
-import { DeleteIcon } from '@/components/Icons';
+import { DeleteIcon, HomeIcon } from '@/components/Icons';
 
 function ListaClientes() {
 	const [customers, setCustomers] = useState([]); // Estado para los clientes
@@ -49,6 +49,9 @@ function ListaClientes() {
 
 	return (
 		<div className={styles.customersContainer}>
+			<Link href='/home'>
+				<HomeIcon />
+			</Link>
 			<h1 className={styles.title}>Lista de Clientes</h1>
 			{message && <p className={styles.message}>{message}</p>}
 			<div className={styles.cardsContainer}>

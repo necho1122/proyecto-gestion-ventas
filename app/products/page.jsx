@@ -1,6 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import styles from './page.module.css';
+import Link from 'next/link';
+import { HomeIcon } from '@/components/Icons';
 
 function Page() {
 	const [productos, setProductos] = useState([]);
@@ -22,6 +24,9 @@ function Page() {
 
 	return (
 		<div className={styles.productsContainer}>
+			<Link href='/home'>
+				<HomeIcon />
+			</Link>
 			<h1>Nuestros Productos</h1>
 			<table className={styles.table}>
 				<thead>

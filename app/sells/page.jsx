@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
+import { HomeIcon } from '@/components/Icons';
 
 function Page() {
 	const [ventas, setVentas] = useState([]); // Estado para almacenar las ventas
@@ -38,6 +39,9 @@ function Page() {
 
 	return (
 		<div className={styles.container}>
+			<Link href='/home'>
+				<HomeIcon />
+			</Link>
 			<h1 className={styles.heading}>Control de Ventas</h1>
 			<table className={styles.table}>
 				<thead>

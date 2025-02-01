@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
-import { DeleteIcon } from '@/components/Icons';
+import { DeleteIcon, HomeIcon } from '@/components/Icons';
 
 function ListaProveedores() {
 	const [proveedores, setProveedores] = useState([]);
@@ -48,6 +48,9 @@ function ListaProveedores() {
 
 	return (
 		<div className={styles.suppliersContainer}>
+			<Link href='/home'>
+				<HomeIcon />
+			</Link>
 			<h1 className={styles.title}>Lista de Proveedores</h1>
 			<div className={styles.cardsContainer}>
 				{proveedores.map((proveedor) => (

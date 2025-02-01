@@ -3,6 +3,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './page.module.css';
+import { HomeIcon } from '@/components/Icons';
 
 function SellStockPage() {
 	const [ventas, setVentas] = useState([]); // Define el estado en el componente
@@ -27,6 +28,9 @@ function SellStockPage() {
 
 	return (
 		<div className={styles.toSellContainer}>
+			<Link href='/home'>
+				<HomeIcon />
+			</Link>
 			<h1 className={styles.title}>Productos a la Venta</h1>
 			<div className={styles.productsToSellContainer}>
 				{ventas.map((product, index) => (

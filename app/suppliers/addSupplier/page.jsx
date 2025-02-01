@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 function FormularioProveedor() {
 	const [formData, setFormData] = useState({
@@ -89,6 +90,17 @@ function FormularioProveedor() {
 					Agregar
 				</button>
 			</form>
+			<Link
+				href='/suppliers'
+				style={{
+					marginTop: '1rem',
+					display: 'block',
+					textAlign: 'center',
+					color: '#1a73e8',
+				}}
+			>
+				Volver
+			</Link>
 		</div>
 	);
 }

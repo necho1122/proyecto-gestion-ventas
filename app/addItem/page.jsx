@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
+import { HomeIcon } from '@/components/Icons';
 
 async function agregarVenta(venta) {
 	try {
@@ -55,6 +56,9 @@ function AddVentaComponent() {
 			style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}
 		>
 			<div className={styles.container}>
+				<Link href='/home'>
+					<HomeIcon />
+				</Link>
 				<h1>Agregar nuevo producto</h1>
 				<div className={styles.formGroup}>
 					<label htmlFor='producto'>Producto:</label>

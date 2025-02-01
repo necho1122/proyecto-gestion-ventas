@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
-import { DeleteIcon, EditIcon } from '@/components/Icons';
+import { DeleteIcon, EditIcon, HomeIcon } from '@/components/Icons';
 
 // Función para eliminar un producto en Firestore
 async function eliminarProducto(id) {
@@ -68,6 +68,9 @@ function Page() {
 		<div className={styles.page}>
 			<div className={styles.container}>
 				<div>
+					<Link href='/home'>
+						<HomeIcon />
+					</Link>
 					<h1 className={styles.heading}>Lista de Inventario</h1>
 					<Link href='/addItem'>
 						<button className={styles.addButton}>Agregar nuevo producto</button>

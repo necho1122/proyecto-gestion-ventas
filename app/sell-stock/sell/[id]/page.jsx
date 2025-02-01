@@ -67,6 +67,7 @@ function ProductPage({ params }) {
 
 		// Crear el producto para agregar
 		const productoParaAgregar = {
+			id: product.id,
 			nombre: product.producto,
 			cantidad: cantidad,
 			precioUnitario: precioUnitarioNumber.toFixed(2), // Formato con dos decimales
