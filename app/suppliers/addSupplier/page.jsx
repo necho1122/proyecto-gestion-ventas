@@ -8,10 +8,15 @@ import Link from 'next/link';
 function FormularioProveedor() {
 	const [formData, setFormData] = useState({
 		nombre: '',
+		razonSocial: '',
+		rif: '',
 		telefono: '',
 		email: '',
 		direccion: '',
 		productos: '',
+		servicios: '',
+		cargo: '',
+		webrrss: '',
 	});
 
 	const router = useRouter();
@@ -52,6 +57,22 @@ function FormularioProveedor() {
 					required
 				/>
 				<input
+					type='text'
+					name='razonSocial'
+					placeholder='Razón Social'
+					value={formData.razonSocial}
+					onChange={handleChange}
+					required
+				/>
+				<input
+					type='text'
+					name='rif'
+					placeholder='RIF'
+					value={formData.rif}
+					onChange={handleChange}
+					required
+				/>
+				<input
 					type='tel'
 					name='telefono'
 					placeholder='Teléfono'
@@ -80,6 +101,30 @@ function FormularioProveedor() {
 					name='productos'
 					placeholder='Productos'
 					value={formData.productos}
+					onChange={handleChange}
+					required
+				/>
+				<input
+					type='text'
+					name='servicios'
+					placeholder='Servicios'
+					value={formData.servicios}
+					onChange={handleChange}
+					required
+				/>
+				<input
+					type='text'
+					name='cargo'
+					placeholder='Cargo'
+					value={formData.cargo}
+					onChange={handleChange}
+					required
+				/>
+				<input
+					type='text'
+					name='webrrss'
+					placeholder='Web/RRSS'
+					value={formData.webrrss}
 					onChange={handleChange}
 					required
 				/>

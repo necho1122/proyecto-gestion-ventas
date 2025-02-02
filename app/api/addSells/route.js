@@ -9,6 +9,7 @@ export async function POST(request) {
 		const collectionRef = collection(db, 'sells');
 		const docRef = await addDoc(collectionRef, {
 			fecha: new Date().toISOString(), // Fecha única para la lista
+			id_factura: Math.floor(Math.random() * 100000000000), // ID de la factura
 			productos: body.productos, // Lista de productos anidada
 		});
 

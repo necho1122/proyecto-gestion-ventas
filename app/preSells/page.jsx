@@ -99,6 +99,7 @@ function ListaCompras() {
 			// Crear un objeto que agrupe toda la lista de compras
 			const compra = {
 				fecha: new Date().toISOString(),
+				id_factura: Math.floor(Math.random() * 100000000000),
 				productos: listaCompras,
 			};
 

@@ -81,3 +81,61 @@
     background-color: #ccc;
     cursor: not-allowed;
 }
+
+.checkBox
+{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkBox input
+{
+    display: none;
+    /* Ocultamos el input por defecto */
+}
+
+.checkBox label
+{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.switch
+{
+    width: 40px;
+    height: 20px;
+    background: #ccc;
+    border-radius: 50px;
+    position: relative;
+    transition: background 0.3s ease-in-out;
+}
+
+.switch::before
+{
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 50%;
+    left: 2px;
+    transform: translateY(-50%);
+    transition: all 0.3s ease-in-out;
+}
+
+input:checked+label .switch
+{
+    background: #4caf50;
+    /* Color verde cuando está activado */
+}
+
+input:checked+label .switch::before
+{
+    left: 22px;
+    /* Mueve la bolita hacia la derecha */
+}

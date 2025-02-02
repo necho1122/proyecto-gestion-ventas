@@ -7,6 +7,7 @@ import Link from 'next/link';
 function AddCustomerForm() {
 	const [formData, setFormData] = useState({
 		cliente: '',
+		cedula: '', // Corregido
 		teléfono: '',
 		email: '',
 		direccion: '',
@@ -15,6 +16,7 @@ function AddCustomerForm() {
 
 	const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState(null);
+	const [empresa, setEmpresa] = useState(false);
 
 	const handleChange = (e) => {
 		const { id, value } = e.target;
@@ -29,24 +31,30 @@ function AddCustomerForm() {
 		setLoading(true);
 		setMessage(null);
 
-		// Validar datos antes de enviar
+		// Validación corregida
 		if (
 			!formData.cliente ||
+			!formData.cedula ||
 			!formData.teléfono ||
 			!formData.email ||
-			!formData.direccion ||
-			!formData.empresa
+			!formData.direccion
 		) {
 			setMessage('Por favor, completa todos los campos.');
 			setLoading(false);
 			return;
 		}
 
+		// Si la opción empresa NO está activada, asignar "Sin empresa"
+		const dataToSend = {
+			...formData,
+			empresa: empresa ? formData.empresa : 'Sin empresa',
+		};
+
 		try {
 			const response = await fetch('/api/addCustomer', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(formData),
+				body: JSON.stringify(dataToSend),
 			});
 
 			if (!response.ok) {
@@ -57,11 +65,13 @@ function AddCustomerForm() {
 			setMessage(`Cliente agregado con éxito: ID ${data.id}`);
 			setFormData({
 				cliente: '',
+				cedula: '',
 				teléfono: '',
 				email: '',
 				direccion: '',
 				empresa: '',
 			});
+			setEmpresa(false); // Reiniciar el checkbox
 		} catch (error) {
 			setMessage('Error al agregar el cliente. Intenta nuevamente.');
 		} finally {
@@ -83,6 +93,16 @@ function AddCustomerForm() {
 						type='text'
 						id='cliente'
 						value={formData.cliente}
+						onChange={handleChange}
+						required
+					/>
+				</div>
+				<div className={styles.formGroup}>
+					<label htmlFor='cedula'>Cédula:</label>
+					<input
+						type='number'
+						id='cedula'
+						value={formData.cedula}
 						onChange={handleChange}
 						required
 					/>
@@ -117,16 +137,31 @@ function AddCustomerForm() {
 						required
 					/>
 				</div>
-				<div className={styles.formGroup}>
-					<label htmlFor='empresa'>Empresa:</label>
+				<div className={styles.checkBox}>
 					<input
-						type='text'
+						type='checkbox'
 						id='empresa'
-						value={formData.empresa}
-						onChange={handleChange}
-						required
+						checked={empresa}
+						onChange={() => setEmpresa(!empresa)}
 					/>
+					<label htmlFor='empresa'>
+						¿Tiene empresa?
+						<span className={styles.switch}></span>
+					</label>
 				</div>
+
+				{empresa && (
+					<div className={styles.formGroup}>
+						<label htmlFor='empresa'>Empresa:</label>
+						<input
+							type='text'
+							id='empresa'
+							value={formData.empresa}
+							onChange={handleChange}
+							required
+						/>
+					</div>
+				)}
 				<button
 					type='submit'
 					className={styles.submitButton}

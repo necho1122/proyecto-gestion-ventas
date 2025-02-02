@@ -59,7 +59,7 @@ function Page() {
 
 						return (
 							<tr key={venta.id}>
-								<td>{venta.id}</td> {/* Mostrar el ID de la compra */}
+								<td>{venta.id_factura}</td> {/* Mostrar el ID de la compra */}
 								<td>{fechaFormateada}</td> {/* Fecha y hora */}
 								<td>${calcularMontoTotal(venta.productos).toFixed(2)}</td>{' '}
 								{/* Monto total */}
