@@ -95,6 +95,29 @@ function ListaCompras() {
 			return;
 		}
 
+		// Verificar si todos los productos tienen suficiente stock
+		const productosSinStock = listaCompras.filter((producto) => {
+			const productoEnStock = stock.find((item) => item.id === producto.id);
+			return !productoEnStock || producto.cantidad > productoEnStock.cantidad;
+		});
+
+		// Si hay productos sin stock suficiente, mostrar alerta y cancelar la compra
+		if (productosSinStock.length > 0) {
+			const mensajeError = productosSinStock
+				.map(
+					(producto) =>
+						`• ${producto.nombre} (Stock disponible: ${
+							stock.find((item) => item.id === producto.id)?.cantidad || 0
+						}, Cantidad solicitada: ${producto.cantidad})`
+				)
+				.join('\n');
+
+			alert(
+				`No hay suficiente stock para los siguientes productos:\n${mensajeError}`
+			);
+			return; // No se procesa la compra si hay problemas de stock
+		}
+
 		try {
 			// Crear un objeto que agrupe toda la lista de compras
 			const compra = {
@@ -116,14 +139,14 @@ function ListaCompras() {
 			}
 
 			alert('Compra procesada con éxito.');
+
+			// Llamar a la función para actualizar las cantidades en stock
+			await actualizarCantidades();
 			limpiarLista(); // Limpiar lista después de procesar la compra
 		} catch (error) {
 			console.error('Error al procesar la compra:', error);
 			alert('Ocurrió un error al procesar la compra.');
 		}
-
-		// Llamar a la función para actualizar las cantidades
-		await actualizarCantidades();
 	};
 
 	if (listaCompras.length === 0) {

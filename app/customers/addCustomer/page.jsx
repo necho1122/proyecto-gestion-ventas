@@ -7,11 +7,16 @@ import Link from 'next/link';
 function AddCustomerForm() {
 	const [formData, setFormData] = useState({
 		cliente: '',
-		cedula: '', // Corregido
+		cedula: '',
 		teléfono: '',
 		email: '',
 		direccion: '',
+		nrocasa: '',
+		ciudad: '',
+		provincia: '',
+		pais: '',
 		empresa: '',
+		rif: '',
 	});
 
 	const [loading, setLoading] = useState(false);
@@ -26,35 +31,42 @@ function AddCustomerForm() {
 		}));
 	};
 
+	const handleChangeTelefono = (e) => {
+		let value = e.target.value.replace(/\D/g, ''); // Elimina caracteres no numéricos
+
+		// Aplica el formato (0XXX)XXXXXXX
+		if (value.length >= 4) {
+			value = `(${value.slice(0, 4)})${value.slice(4, 11)}`;
+		}
+
+		// Limita la cantidad de caracteres a 13
+		if (value.length > 13) {
+			value = value.slice(0, 13);
+		}
+
+		setFormData({ ...formData, teléfono: value });
+	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
 		setMessage(null);
 
-		// Validación corregida
-		if (
-			!formData.cliente ||
-			!formData.cedula ||
-			!formData.teléfono ||
-			!formData.email ||
-			!formData.direccion
-		) {
-			setMessage('Por favor, completa todos los campos.');
-			setLoading(false);
-			return;
-		}
-
-		// Si la opción empresa NO está activada, asignar "Sin empresa"
+		// Asegúrate de que todos los campos se envíen correctamente
 		const dataToSend = {
 			...formData,
-			empresa: empresa ? formData.empresa : 'Sin empresa',
+			empresa: empresa ? formData.empresa : 'Sin empresa', // Asignar valor por defecto a empresa
+			nrocasa: formData.nrocasa || '', // Asegura que los campos opcionales no sean undefined
+			ciudad: formData.ciudad || '',
+			provincia: formData.provincia || '',
+			pais: formData.pais || '',
 		};
 
 		try {
 			const response = await fetch('/api/addCustomer', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(dataToSend),
+				body: JSON.stringify(dataToSend), // Enviar todos los campos
 			});
 
 			if (!response.ok) {
@@ -69,7 +81,12 @@ function AddCustomerForm() {
 				teléfono: '',
 				email: '',
 				direccion: '',
+				nrocasa: '',
+				ciudad: '',
+				provincia: '',
+				pais: '',
 				empresa: '',
+				rif: '',
 			});
 			setEmpresa(false); // Reiniciar el checkbox
 		} catch (error) {
@@ -113,8 +130,9 @@ function AddCustomerForm() {
 						type='text'
 						id='teléfono'
 						value={formData.teléfono}
-						onChange={handleChange}
+						onChange={handleChangeTelefono}
 						required
+						placeholder='(0424)1234567'
 					/>
 				</div>
 				<div className={styles.formGroup}>
@@ -135,6 +153,47 @@ function AddCustomerForm() {
 						value={formData.direccion}
 						onChange={handleChange}
 						required
+						placeholder='Calle, Avenida, Carretera...'
+					/>
+				</div>
+				<div className={styles.formGroup}>
+					<label htmlFor='nrocasa'>Número:</label>
+					<input
+						type='text'
+						id='nrocasa'
+						value={formData.nrocasa}
+						onChange={handleChange}
+						placeholder='Casa, Apartamento, Local...'
+					/>
+				</div>
+				<div className={styles.formGroup}>
+					<label htmlFor='ciudad'>Ciudad:</label>
+					<input
+						type='text'
+						id='ciudad'
+						value={formData.ciudad}
+						onChange={handleChange}
+						placeholder='Ciudad...'
+					/>
+				</div>
+				<div className={styles.formGroup}>
+					<label htmlFor='provincia'>Provincia:</label>
+					<input
+						type='text'
+						id='provincia'
+						value={formData.provincia}
+						onChange={handleChange}
+						placeholder='Provincia...'
+					/>
+				</div>
+				<div className={styles.formGroup}>
+					<label htmlFor='pais'>País:</label>
+					<input
+						type='text'
+						id='pais'
+						value={formData.pais}
+						onChange={handleChange}
+						placeholder='País...'
 					/>
 				</div>
 				<div className={styles.checkBox}>
@@ -159,6 +218,14 @@ function AddCustomerForm() {
 							value={formData.empresa}
 							onChange={handleChange}
 							required
+						/>
+						<label htmlFor='rif'>RIF:</label>
+						<input
+							type='text'
+							id='rif'
+							value={formData.rif}
+							onChange={handleChange}
+							placeholder='J-12345678'
 						/>
 					</div>
 				)}

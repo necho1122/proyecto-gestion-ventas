@@ -76,6 +76,18 @@ function Page() {
 						<button className={styles.addButton}>Agregar nuevo producto</button>
 					</Link>
 				</div>
+				<div>
+					{/* Aviso de poco stock */}
+					{ventas.some((venta) => venta.cantidad < 3) && (
+						<p className={styles.stockWarning}>
+							<strong>Productos con stock menor a 3 unidades:</strong>{' '}
+							{ventas
+								.filter((venta) => venta.cantidad <= 3)
+								.map((venta) => venta.producto)
+								.join(', ')}
+						</p>
+					)}
+				</div>
 				<table className={styles.table}>
 					<thead>
 						<tr>

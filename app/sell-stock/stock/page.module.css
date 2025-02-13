@@ -94,3 +94,10 @@
     display: flex;
     justify-content: space-between;
 }
+
+.stockWarning
+{
+    color: #f44336;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}

@@ -46,10 +46,10 @@ function ListaProveedores() {
 
 			// Actualizar la lista de proveedores
 			setSuppliers((prev) => prev.filter((supplier) => supplier.id !== id));
-			setMessage('Proveedor eliminado con éxito.');
+			alert('Proveedor eliminado con éxito.');
 		} catch (error) {
 			console.error(error.message);
-			setMessage('Error al eliminar el proveedor.');
+			alert('Error al eliminar el proveedor.');
 		}
 	};
 
@@ -60,10 +60,7 @@ function ListaProveedores() {
 			setSuppliers(allSuppliers); // Si no hay texto de búsqueda, muestra todos los proveedores
 		} else {
 			const filteredSuppliers = allSuppliers.filter((supplier) =>
-				supplier.nombre
-					.toLowerCase()
-					.slice(0, searchValue.length)
-					.includes(searchValue)
+				supplier.rif.toLowerCase().includes(searchValue)
 			);
 			setSuppliers(filteredSuppliers); // Muestra los proveedores filtrados
 		}
@@ -82,7 +79,7 @@ function ListaProveedores() {
 			<div className={styles.searchContainer}>
 				<input
 					type='text'
-					placeholder='Buscar proveedor'
+					placeholder='Buscar proveedor por RIF'
 					className={styles.searchInput}
 					onChange={handleSearch} // Ejecuta la búsqueda al escribir
 				/>
@@ -102,6 +99,7 @@ function ListaProveedores() {
 			</Link>
 
 			{message && <p className={styles.message}>{message}</p>}
+
 			<div className={styles.cardsContainer}>
 				{suppliers.map((supplier) => (
 					<div
@@ -127,9 +125,28 @@ function ListaProveedores() {
 								{supplier.email}
 							</a>
 						</p>
+
+						{/* Dirección desglosada */}
 						<p className={styles.detail}>
-							<strong>Dirección:</strong> {supplier.direccion}
+							<strong>Dirección:</strong>
+							<br />
+							{supplier.direccion?.calle && (
+								<span>{supplier.direccion.calle}, </span>
+							)}
+							{supplier.direccion?.numero && (
+								<span>{supplier.direccion.numero}, </span>
+							)}
+							{supplier.direccion?.ciudad && (
+								<span>{supplier.direccion.ciudad}, </span>
+							)}
+							{supplier.direccion?.estado && (
+								<span>{supplier.direccion.estado}, </span>
+							)}
+							{supplier.direccion?.pais && (
+								<span>{supplier.direccion.pais}</span>
+							)}
 						</p>
+
 						<p className={styles.detail}>
 							<strong>Productos:</strong> {supplier.productos}
 						</p>
@@ -142,6 +159,7 @@ function ListaProveedores() {
 						<p className={styles.detail}>
 							<strong>Web/RRSS:</strong> {supplier.webrrss}
 						</p>
+
 						<button
 							className={styles.deleteButton}
 							onClick={() => deleteSupplier(supplier.id)}

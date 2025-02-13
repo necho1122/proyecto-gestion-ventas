@@ -4,18 +4,35 @@ import { collection, addDoc } from 'firebase/firestore';
 export async function POST(request) {
 	try {
 		const body = await request.json();
+		const {
+			nombre,
+			razonSocial,
+			rif,
+			telefono,
+			email,
+			direccion,
+			productos,
+			servicios,
+			cargo,
+			webrrss,
+		} = body;
 
+		// Validación de campos obligatorios
 		if (
-			!body.nombre ||
-			!body.razonSocial ||
-			!body.rif ||
-			!body.telefono ||
-			!body.email ||
-			!body.direccion ||
-			!body.productos ||
-			!body.servicios ||
-			!body.cargo ||
-			!body.webrrss
+			!nombre ||
+			!razonSocial ||
+			!rif ||
+			!telefono ||
+			!email ||
+			!direccion?.calle ||
+			!direccion?.numero ||
+			!direccion?.ciudad ||
+			!direccion?.estado ||
+			!direccion?.pais ||
+			!productos ||
+			!servicios ||
+			!cargo ||
+			!webrrss
 		) {
 			return new Response(
 				JSON.stringify({ error: 'Todos los campos son obligatorios' }),
@@ -26,7 +43,28 @@ export async function POST(request) {
 			);
 		}
 
-		const docRef = await addDoc(collection(db, 'proveedores'), body);
+		// Crear la estructura de datos para Firebase
+		const proveedorData = {
+			nombre,
+			razonSocial,
+			rif,
+			telefono,
+			email,
+			direccion: {
+				calle: direccion.calle,
+				numero: direccion.numero,
+				ciudad: direccion.ciudad,
+				estado: direccion.estado,
+				pais: direccion.pais,
+			},
+			productos,
+			servicios,
+			cargo,
+			webrrss,
+			fechaRegistro: new Date().toISOString(),
+		};
+
+		const docRef = await addDoc(collection(db, 'proveedores'), proveedorData);
 
 		return new Response(
 			JSON.stringify({

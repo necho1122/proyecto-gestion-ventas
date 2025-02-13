@@ -42,7 +42,10 @@ function Page() {
 			<Link href='/home'>
 				<HomeIcon />
 			</Link>
-			<h1 className={styles.heading}>Control de Ventas</h1>
+			<h1 className={styles.heading}>Control de Facturación</h1>
+			<Link href='/sells/extracto-ventas'>
+				<button className={styles.actionButton}>Ver Extracto de Ventas</button>
+			</Link>
 			<table className={styles.table}>
 				<thead>
 					<tr>

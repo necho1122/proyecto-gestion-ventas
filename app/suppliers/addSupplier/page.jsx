@@ -12,7 +12,13 @@ function FormularioProveedor() {
 		rif: '',
 		telefono: '',
 		email: '',
-		direccion: '',
+		direccion: {
+			calle: '',
+			numero: '',
+			ciudad: '',
+			estado: '',
+			pais: '',
+		},
 		productos: '',
 		servicios: '',
 		cargo: '',
@@ -22,7 +28,18 @@ function FormularioProveedor() {
 	const router = useRouter();
 
 	const handleChange = (e) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
+		const { name, value } = e.target;
+
+		// Si el campo pertenece a la dirección, actualizarlo dentro del objeto direccion
+		if (name.startsWith('direccion.')) {
+			const field = name.split('.')[1]; // Extraer la clave del objeto direccion
+			setFormData((prevState) => ({
+				...prevState,
+				direccion: { ...prevState.direccion, [field]: value },
+			}));
+		} else {
+			setFormData({ ...formData, [name]: value });
+		}
 	};
 
 	const handleSubmit = async (e) => {
@@ -44,10 +61,22 @@ function FormularioProveedor() {
 		}
 	};
 
+	const formatPhoneNumber = (input) => {
+		// Eliminar caracteres no numéricos
+		const cleaned = input.replace(/\D/g, '');
+
+		// Aplicar formato (0XXX)XXXXXXX
+		if (cleaned.length >= 4) {
+			return `(${cleaned.slice(0, 4)})${cleaned.slice(4, 11)}`;
+		}
+		return cleaned; // Retorna sin formato si aún no hay suficientes dígitos
+	};
+
 	return (
 		<div className={styles.formContainer}>
 			<h1 className={styles.title}>Agregar Proveedor</h1>
 			<form onSubmit={handleSubmit}>
+				<h3>Proveedor:</h3>
 				<input
 					type='text'
 					name='nombre'
@@ -75,11 +104,17 @@ function FormularioProveedor() {
 				<input
 					type='tel'
 					name='telefono'
-					placeholder='Teléfono'
+					placeholder='(0424)1234567'
 					value={formData.telefono}
-					onChange={handleChange}
+					onChange={(e) => {
+						const formattedPhone = formatPhoneNumber(e.target.value);
+						setFormData({ ...formData, telefono: formattedPhone });
+					}}
+					pattern='\(\d{4}\)\d{7}'
+					title='El formato debe ser (0XXX)XXXXXXX'
 					required
 				/>
+
 				<input
 					type='email'
 					name='email'
@@ -88,14 +123,52 @@ function FormularioProveedor() {
 					onChange={handleChange}
 					required
 				/>
+
+				{/* Dirección desglosada */}
+				<h3>Dirección</h3>
 				<input
 					type='text'
-					name='direccion'
-					placeholder='Dirección'
-					value={formData.direccion}
+					name='direccion.calle'
+					placeholder='Calle/Av/Carretera'
+					value={formData.direccion.calle}
 					onChange={handleChange}
 					required
 				/>
+				<input
+					type='text'
+					name='direccion.numero'
+					placeholder='Número de edificio/apto/etc'
+					value={formData.direccion.numero}
+					onChange={handleChange}
+					required
+				/>
+				<input
+					type='text'
+					name='direccion.ciudad'
+					placeholder='Ciudad'
+					value={formData.direccion.ciudad}
+					onChange={handleChange}
+					required
+				/>
+				<input
+					type='text'
+					name='direccion.estado'
+					placeholder='Estado/Provincia'
+					value={formData.direccion.estado}
+					onChange={handleChange}
+					required
+				/>
+				<input
+					type='text'
+					name='direccion.pais'
+					placeholder='País'
+					value={formData.direccion.pais}
+					onChange={handleChange}
+					required
+				/>
+
+				<h3>Otros</h3>
+
 				<input
 					type='text'
 					name='productos'
@@ -128,6 +201,7 @@ function FormularioProveedor() {
 					onChange={handleChange}
 					required
 				/>
+
 				<button
 					type='submit'
 					className={styles.submitButton}

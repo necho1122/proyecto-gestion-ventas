@@ -15,7 +15,7 @@ function UserPanel() {
 		<div className={styles.userPanel}>
 			<Link href='/sells'>
 				<Sell />
-				Ventas
+				Facturación
 			</Link>
 			<Link href='/products'>
 				<Productos />
