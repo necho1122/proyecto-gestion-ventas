@@ -9,6 +9,7 @@ import { HomeIcon } from '@/components/Icons';
 function ListaCompras() {
 	const { listaCompras, eliminarProducto, limpiarLista } = useListaCompras();
 	const [stock, setStock] = useState([]);
+	const [tasa, setTasa] = useState(0); // Estado para la tasa de cambio
 
 	// Obtener la lista de inventario desde Firestore
 	const obtenerStock = async () => {
@@ -26,65 +27,22 @@ function ListaCompras() {
 		obtenerStock();
 	}, []);
 
-	const actualizarCantidades = async () => {
-		try {
-			// Creamos un arreglo de promesas de actualizaciones
-			const promises = listaCompras.map(async (producto) => {
-				// Buscar el producto en el stock
-				const productoEnStock = stock.find((item) => item.id === producto.id);
+	// Calcular el total final en USD
+	const totalFinal = listaCompras.reduce(
+		(total, producto) => parseFloat(total) + parseFloat(producto.precioTotal),
+		0
+	);
+	// Redondear el total final a dos decimales
+	const totalFinalFormateado = totalFinal.toFixed(2);
 
-				if (!productoEnStock) {
-					throw new Error(
-						`Producto no encontrado en el stock: ${producto.nombre}`
-					);
-				}
+	// Calcular el total en Bs (multiplicado por la tasa)
+	const totalFinalBs = (totalFinal * tasa).toFixed(2);
 
-				// Verificar si la cantidad vendida supera el stock disponible
-				const nuevaCantidad = productoEnStock.cantidad - producto.cantidad;
-
-				console.log(typeof nuevaCantidad);
-
-				// Verificar si la nueva cantidad es negativa o NaN
-				if (isNaN(nuevaCantidad) || nuevaCantidad < 0) {
-					alert(
-						`La cantidad vendida de ${producto.nombre} supera el stock disponible o es inválida.`
-					);
-					throw new Error(
-						`No hay suficiente stock para el producto: ${producto.nombre}`
-					);
-				}
-
-				// Actualizar la cantidad en el stock
-				const response = await fetch('/api/editItemQty', {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						id: producto.id, // ID del producto
-						nuevaCantidad, // La nueva cantidad calculada
-					}),
-				});
-
-				if (!response.ok) {
-					const errorData = await response.json();
-					throw new Error(
-						errorData.error ||
-							`Error al actualizar el stock del producto ${producto.nombre}`
-					);
-				}
-
-				console.log(`Stock actualizado para: ${producto.nombre}`);
-			});
-
-			// Ejecutar todas las promesas
-			await Promise.all(promises);
-
-			alert('Stock actualizado exitosamente para todos los productos.');
-			limpiarLista(); // Limpiar la lista después de procesar
-		} catch (error) {
-			console.error('Error al actualizar el stock:', error);
-			alert('Ocurrió un error al actualizar el stock de los productos.');
+	// Función para manejar el cambio en la tasa de cambio
+	const handleTasaChange = (e) => {
+		const nuevaTasa = parseFloat(e.target.value);
+		if (!isNaN(nuevaTasa) && nuevaTasa > 0) {
+			setTasa(nuevaTasa); // Actualiza la tasa solo si es un valor válido
 		}
 	};
 
@@ -149,6 +107,67 @@ function ListaCompras() {
 		}
 	};
 
+	// Función para actualizar las cantidades en el stock
+	const actualizarCantidades = async () => {
+		try {
+			// Creamos un arreglo de promesas de actualizaciones
+			const promises = listaCompras.map(async (producto) => {
+				// Buscar el producto en el stock
+				const productoEnStock = stock.find((item) => item.id === producto.id);
+
+				if (!productoEnStock) {
+					throw new Error(
+						`Producto no encontrado en el stock: ${producto.nombre}`
+					);
+				}
+
+				// Verificar si la cantidad vendida supera el stock disponible
+				const nuevaCantidad = productoEnStock.cantidad - producto.cantidad;
+
+				// Verificar si la nueva cantidad es negativa o NaN
+				if (isNaN(nuevaCantidad) || nuevaCantidad < 0) {
+					alert(
+						`La cantidad vendida de ${producto.nombre} supera el stock disponible o es inválida.`
+					);
+					throw new Error(
+						`No hay suficiente stock para el producto: ${producto.nombre}`
+					);
+				}
+
+				// Actualizar la cantidad en el stock
+				const response = await fetch('/api/editItemQty', {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						id: producto.id, // ID del producto
+						nuevaCantidad, // La nueva cantidad calculada
+					}),
+				});
+
+				if (!response.ok) {
+					const errorData = await response.json();
+					throw new Error(
+						errorData.error ||
+							`Error al actualizar el stock del producto ${producto.nombre}`
+					);
+				}
+
+				console.log(`Stock actualizado para: ${producto.nombre}`);
+			});
+
+			// Ejecutar todas las promesas
+			await Promise.all(promises);
+
+			alert('Stock actualizado exitosamente para todos los productos.');
+			limpiarLista(); // Limpiar la lista después de procesar
+		} catch (error) {
+			console.error('Error al actualizar el stock:', error);
+			alert('Ocurrió un error al actualizar el stock de los productos.');
+		}
+	};
+
 	if (listaCompras.length === 0) {
 		return (
 			<div className={styles.WithoutItemsContainer}>
@@ -166,6 +185,17 @@ function ListaCompras() {
 				<HomeIcon />
 			</Link>
 			<h2 className={styles.heading}>Lista de Compras</h2>
+			<div className={styles.tasaUsdBs}>
+				<label htmlFor='tasa'>Tasa USD/Bs:</label>
+				<input
+					id='tasa'
+					type='number'
+					value={tasa}
+					onChange={handleTasaChange} // Actualiza la tasa con el valor del input
+					min='0.01' // Prevenir valores negativos o cero
+					step='any' // Permitir decimales
+				/>
+			</div>
 			<table className={styles.table}>
 				<thead>
 					<tr>
@@ -195,6 +225,10 @@ function ListaCompras() {
 					))}
 				</tbody>
 			</table>
+			<div className={styles.total}>
+				<h3>Total Final (USD): ${totalFinalFormateado}</h3>
+				<h3>Total Final (Bs): Bs {totalFinalBs}</h3>
+			</div>
 			<div className={styles.actions}>
 				<button
 					className={`${styles.button} ${styles.clearButton}`}
@@ -204,7 +238,7 @@ function ListaCompras() {
 				</button>
 				<button
 					className={`${styles.button} ${styles.processButton}`}
-					onClick={procesarCompra}
+					onClick={procesarCompra} // Ahora la función está definida
 				>
 					Procesar Compra
 				</button>

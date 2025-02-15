@@ -120,7 +120,16 @@ function AddCustomerForm() {
 						type='number'
 						id='cedula'
 						value={formData.cedula}
-						onChange={handleChange}
+						onChange={(e) => {
+							const value = e.target.value;
+							if (
+								value === '' ||
+								(Number(value) <= 99999999 && Number(value) >= 0)
+							) {
+								handleChange(e);
+							}
+						}}
+						max={99999999}
 						required
 					/>
 				</div>
