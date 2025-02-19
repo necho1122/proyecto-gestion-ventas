@@ -32,6 +32,12 @@ function RevenueDashboard() {
 
 	return (
 		<div className={styles.revenueDashboard}>
+			<Image
+				src='/logo_dos.jpeg'
+				alt='Logo software'
+				width={150}
+				height={150}
+			/>
 			<h2>Consolidado de Ventas</h2>
 			<span>
 				<p>

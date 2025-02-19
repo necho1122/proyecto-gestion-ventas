@@ -16,14 +16,36 @@ function NavBar() {
 							height={40}
 						/>
 					</Link>
-					<Link href='/user'>
-						<Image
-							src='https://cdn-icons-png.flaticon.com/512/456/456212.png'
-							alt='user'
-							width={30}
-							height={30}
-						/>
-					</Link>
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'row',
+							alignItems: 'center',
+						}}
+					>
+						<Link
+							href='/about'
+							style={{
+								display: 'flex',
+								flexDirection: 'row',
+								alignItems: 'center',
+								marginRight: '1rem',
+								fontSize: '1.2rem',
+								fontWeight: 'bold',
+							}}
+						>
+							{' '}
+							👀 Quienes somos?
+						</Link>
+						<Link href='/user'>
+							<Image
+								src='https://cdn-icons-png.flaticon.com/512/456/456212.png'
+								alt='user'
+								width={30}
+								height={30}
+							/>
+						</Link>
+					</div>
 				</nav>
 			</div>
 		</div>
