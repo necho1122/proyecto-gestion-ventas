@@ -7,19 +7,19 @@ import { HomeIcon } from '@/components/Icons';
 
 async function obtenerProductos() {
 	try {
-		const response = await fetch('/api/getStocksData');
-		if (!response.ok) throw new Error('Error al obtener los productos');
+		const response = await fetch('/api/getServices');
+		if (!response.ok) throw new Error('Error al obtener los servicios');
 		const data = await response.json();
 		return data;
 	} catch (error) {
-		console.error('Error al obtener los productos:', error);
+		console.error('Error al obtener los servicios:', error);
 		return [];
 	}
 }
 
 async function editarProducto(id, producto) {
 	try {
-		const response = await fetch('/api/editData', {
+		const response = await fetch('/api/services/editService', {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
@@ -33,10 +33,10 @@ async function editarProducto(id, producto) {
 		}
 
 		const data = await response.json();
-		console.log('Producto actualizado con éxito:', data);
+		console.log('Servicio actualizado con éxito:', data);
 		return data;
 	} catch (error) {
-		console.error('Error al actualizar producto:', error);
+		console.error('Error al actualizar servicio:', error);
 		throw error;
 	}
 }
@@ -46,11 +46,9 @@ function EditProduct({ params }) {
 
 	const [productos, setProductos] = useState([]);
 	const [producto, setProducto] = useState({
-		producto: '',
-		cantidad: '',
-		precioUnitario: '',
-		codigo: '',
-		proveedor: '',
+		servicio: '',
+		descripcion: '',
+		precio: '',
 	});
 
 	useEffect(() => {
@@ -80,9 +78,9 @@ function EditProduct({ params }) {
 
 		try {
 			await editarProducto(id, producto);
-			alert('Producto actualizado exitosamente');
+			alert('Servicio actualizado exitosamente');
 		} catch (error) {
-			alert('Error al actualizar el producto');
+			alert('Error al actualizar el Servicio');
 		}
 	};
 
@@ -94,35 +92,24 @@ function EditProduct({ params }) {
 			>
 				<HomeIcon /> Ir a inicio
 			</Link>
-			<h1>Editar Producto</h1>
+			<h1>Editar Servicio</h1>
 			<form onSubmit={handleSubmit}>
-				{['producto', 'cantidad', 'precioUnitario', 'codigo', 'proveedor'].map(
-					(field) => (
-						<div
-							className={styles.formGroup}
-							key={field}
-						>
-							<label htmlFor={field}>
-								{field.charAt(0).toUpperCase() + field.slice(1)}:
-							</label>
-							<input
-								type={
-									field === 'cantidad' || field === 'precioUnitario'
-										? 'number'
-										: 'text'
-								}
-								name={field}
-								value={producto[field]}
-								onChange={handleChange}
-								required
-							/>
-						</div>
-					)
-				)}
-				<button type='submit'>Actualizar Producto</button>
+				{['servicio', 'descripcion', 'precio'].map((field) => (
+					<div key={field}>
+						<label htmlFor={field}>{field}</label>
+						<input
+							type='text'
+							id={field}
+							name={field}
+							value={producto[field]}
+							onChange={handleChange}
+						/>
+					</div>
+				))}
+				<button type='submit'>Actualizar Servicio</button>
 			</form>
 			<Link
-				href='/sell-stock/stock'
+				href='/services'
 				className={styles.inventoryLink}
 			>
 				Volver a la lista de inventario
