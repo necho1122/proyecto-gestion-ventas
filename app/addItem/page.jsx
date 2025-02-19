@@ -32,6 +32,8 @@ function AddVentaComponent() {
 		producto: '',
 		cantidad: '',
 		precioUnitario: '',
+		codigo: '',
+		proveedor: '',
 	});
 
 	const handleChange = (e) => {
@@ -87,7 +89,25 @@ function AddVentaComponent() {
 						onChange={handleChange}
 					/>
 				</div>
-				<button onClick={handleAddVenta}>Agregar Venta</button>
+				<div className={styles.formGroup}>
+					<label htmlFor='codigo'>Código:</label>
+					<input
+						type='text'
+						id='codigo'
+						value={venta.codigo}
+						onChange={handleChange}
+					/>
+				</div>
+				<div className={styles.formGroup}>
+					<label htmlFor='proveedor'>Proveedor:</label>
+					<input
+						type='text'
+						id='proveedor'
+						value={venta.proveedor}
+						onChange={handleChange}
+					/>
+				</div>
+				<button onClick={handleAddVenta}>Agregar Producto</button>
 				<Link href='/sell-stock/stock'>
 					<button
 						style={{

@@ -83,3 +83,10 @@
     width: 100%;
     max-width: 300px;
 }
+
+.searchLabel
+{
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}

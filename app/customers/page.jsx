@@ -51,34 +51,47 @@ function ListaClientes() {
 	}, []);
 
 	const handleSearch = (e) => {
-		const searchValue = e.target.value.replace(/\D/g, '').trim(); // Solo números
+		const searchValue = e.target.value.trim().toLowerCase(); // Convertir a minúsculas
 
 		if (searchValue === '') {
 			setCustomers(allCustomers);
 			return;
 		}
 
-		const filteredCustomers = allCustomers.filter(
-			(customer) => customer.cedula && customer.cedula.startsWith(searchValue) // Verifica que cedula existe
-		);
+		const filteredCustomers = allCustomers.filter((customer) => {
+			const nombre = customer.cliente?.toLowerCase() || '';
+			const cedula = customer.cedula?.toString() || '';
+			const rif = customer.rif?.toLowerCase() || '';
+
+			return (
+				nombre.includes(searchValue) ||
+				cedula.includes(searchValue) ||
+				rif.includes(searchValue)
+			);
+		});
 
 		setCustomers(filteredCustomers);
 	};
 
 	return (
 		<div className={styles.customersContainer}>
-			<Link href='/home'>
-				<HomeIcon />
+			<Link
+				href='/home'
+				style={{ display: 'flex', alignItems: 'center' }}
+			>
+				<HomeIcon /> <p style={{ marginLeft: '10px' }}>Ir a inicio</p>
 			</Link>
 			<h1 className={styles.title}>Lista de Clientes</h1>
 
 			<div className={styles.searchContainer}>
+				<label className={styles.searchLabel}>
+					<strong>Buscar:</strong>
+				</label>
 				<input
-					type='number'
-					placeholder='Buscar cliente por cédula'
+					type='text'
+					placeholder='Cédula, RIF o Nombre'
 					className={styles.searchInput}
 					onChange={handleSearch}
-					onInput={(e) => (e.target.value = e.target.value.replace(/\D/g, ''))} // Solo números
 				/>
 			</div>
 

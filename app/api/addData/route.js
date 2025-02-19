@@ -13,6 +13,8 @@ export async function POST(request) {
 			producto: body.producto,
 			cantidad: body.cantidad,
 			precioUnitario: body.precioUnitario,
+			codigo: body.codigo,
+			proveedor: body.proveedor,
 		});
 
 		console.log('Venta agregada con ID:', docRef.id); // Firestore asignará el ID automáticamente

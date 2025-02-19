@@ -6,7 +6,9 @@ import { HomeIcon } from '@/components/Icons';
 
 function Page() {
 	const [productos, setProductos] = useState([]);
+	const [searchQuery, setSearchQuery] = useState(''); // Estado para la búsqueda
 
+	// Función para obtener productos desde la API
 	const obtenerProductos = async () => {
 		try {
 			const response = await fetch('/api/getStocksData', { method: 'GET' });
@@ -18,16 +20,37 @@ function Page() {
 		}
 	};
 
+	// Llamada a obtener productos cuando el componente se monta
 	useEffect(() => {
 		obtenerProductos();
 	}, []);
 
+	// Filtrar y ordenar productos alfabéticamente por nombre
+	const filteredAndSortedProducts = productos
+		.filter((product) =>
+			product.producto.toLowerCase().includes(searchQuery.toLowerCase())
+		)
+		.sort((a, b) => a.producto.localeCompare(b.producto));
+
 	return (
 		<div className={styles.productsContainer}>
-			<Link href='/home'>
-				<HomeIcon />
+			<Link
+				href='/home'
+				style={{ display: 'flex', alignItems: 'center' }}
+			>
+				<HomeIcon /> <p style={{ marginLeft: '10px' }}>Ir a inicio</p>
 			</Link>
 			<h1>Nuestros Productos</h1>
+
+			{/* Sección de búsqueda */}
+			<input
+				type='text'
+				placeholder='Buscar producto...'
+				value={searchQuery}
+				onChange={(e) => setSearchQuery(e.target.value)}
+				className={styles.searchInput}
+			/>
+
 			<table className={styles.table}>
 				<thead>
 					<tr>
@@ -36,7 +59,7 @@ function Page() {
 					</tr>
 				</thead>
 				<tbody>
-					{productos.map((product, index) => {
+					{filteredAndSortedProducts.map((product, index) => {
 						// Verificar y convertir precioUnitario a número
 						const precioUnitario = parseFloat(product.precioUnitario) || 0;
 

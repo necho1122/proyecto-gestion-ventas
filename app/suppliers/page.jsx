@@ -55,15 +55,26 @@ function ListaProveedores() {
 
 	// Filtrar proveedores según la búsqueda
 	const handleSearch = (e) => {
-		const searchValue = e.target.value.toLowerCase();
+		const searchValue = e.target.value.trim().toLowerCase(); // Convertir a minúsculas
+
 		if (searchValue === '') {
-			setSuppliers(allSuppliers); // Si no hay texto de búsqueda, muestra todos los proveedores
-		} else {
-			const filteredSuppliers = allSuppliers.filter((supplier) =>
-				supplier.rif.toLowerCase().includes(searchValue)
-			);
-			setSuppliers(filteredSuppliers); // Muestra los proveedores filtrados
+			setSuppliers(allSuppliers);
+			return;
 		}
+
+		const filteredSuppliers = allSuppliers.filter((supplier) => {
+			const razonSocial = supplier.razonSocial?.toLowerCase() || '';
+			const rif = supplier.rif?.toLowerCase() || '';
+			const nombre = supplier.nombre?.toLowerCase() || '';
+
+			return (
+				razonSocial.includes(searchValue) ||
+				rif.includes(searchValue) ||
+				nombre.includes(searchValue)
+			);
+		});
+
+		setSuppliers(filteredSuppliers);
 	};
 
 	useEffect(() => {
@@ -72,14 +83,20 @@ function ListaProveedores() {
 
 	return (
 		<div className={styles.suppliersContainer}>
-			<Link href='/home'>
-				<HomeIcon />
+			<Link
+				href='/home'
+				style={{ display: 'flex', alignItems: 'center' }}
+			>
+				<HomeIcon /> <p style={{ marginLeft: '10px' }}>Ir a inicio</p>
 			</Link>
 			<h1 className={styles.title}>Lista de Proveedores</h1>
 			<div className={styles.searchContainer}>
+				<label className={styles.searchLabel}>
+					<strong>Buscar:</strong>
+				</label>
 				<input
 					type='text'
-					placeholder='Buscar proveedor por RIF'
+					placeholder='Razon Social, Rif o Nombre'
 					className={styles.searchInput}
 					onChange={handleSearch} // Ejecuta la búsqueda al escribir
 				/>

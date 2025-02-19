@@ -5,18 +5,17 @@ import Link from 'next/link';
 import { useListaCompras } from '@/context/sellsContext';
 
 function ProductPage({ params }) {
-	const [cantidad, setCantidad] = useState(1); // Iniciar la cantidad como 1
+	const [cantidad, setCantidad] = useState(1);
 	const { agregarProducto } = useListaCompras();
 	const [product, setProduct] = useState(null);
-	const [ventas, setVentas] = useState([]); // Define el estado en el componente
+	const [ventas, setVentas] = useState([]);
 
-	// Función para obtener las ventas desde la API
 	const obtenerVentas = async () => {
 		try {
 			const response = await fetch('/api/getStocksData', { method: 'GET' });
 			if (!response.ok) throw new Error('Error al obtener las ventas');
 			const data = await response.json();
-			setVentas(data); // Actualiza el estado con los datos obtenidos
+			setVentas(data);
 		} catch (error) {
 			console.error(error.message);
 		}
@@ -26,10 +25,8 @@ function ProductPage({ params }) {
 		obtenerVentas();
 	}, []);
 
-	// Usar useEffect para manejar el acceso a params y ventas
 	useEffect(() => {
 		if (ventas.length > 0) {
-			// Asegúrate de comparar `id` con el tipo correcto
 			const id = params.id;
 			const productoEncontrado = ventas.find(
 				(p) => String(p.id) === String(id)
@@ -38,46 +35,49 @@ function ProductPage({ params }) {
 		}
 	}, [params, ventas]);
 
-	// Si no se encuentra el producto, muestra un mensaje de error
 	if (!product) {
 		return <div>Producto no encontrado</div>;
 	}
 
-	// Función para manejar el incremento de la cantidad
 	const incrementarCantidad = () => {
 		setCantidad((prevCantidad) => prevCantidad + 1);
 	};
 
-	// Función para manejar el decremento de la cantidad
 	const decrementarCantidad = () => {
 		if (cantidad > 1) {
 			setCantidad((prevCantidad) => prevCantidad - 1);
 		}
 	};
 
-	// Función para agregar el producto a la lista de compras
+	// Manejar cambios manuales en el input de cantidad
+	const handleCantidadChange = (e) => {
+		const valor = e.target.value;
+		// Validar que sea un número positivo y mayor a 0
+		if (/^\d+$/.test(valor) && parseInt(valor, 10) > 0) {
+			setCantidad(parseInt(valor, 10));
+		} else if (valor === '') {
+			setCantidad('');
+		}
+	};
+
 	const handleAgregarProducto = () => {
 		const precioUnitarioNumber = parseFloat(product.precioUnitario);
-
-		// Validar si el precio unitario se pudo convertir
 		if (isNaN(precioUnitarioNumber)) {
 			alert('Error: Precio unitario no es válido');
 			return;
 		}
 
-		// Crear el producto para agregar
 		const productoParaAgregar = {
 			id: product.id,
 			nombre: product.producto,
 			cantidad: cantidad,
-			precioUnitario: precioUnitarioNumber.toFixed(2), // Formato con dos decimales
-			precioTotal: (cantidad * precioUnitarioNumber).toFixed(2), // Formato con dos decimales
+			precioUnitario: precioUnitarioNumber.toFixed(2),
+			precioTotal: (cantidad * precioUnitarioNumber).toFixed(2),
 			fecha: new Date().toISOString(),
 		};
 
-		// Agregar el producto a la lista
 		agregarProducto(productoParaAgregar);
-		alert('Producto agregado a la lista de compras'); // Feedback al usuario
+		alert('Producto agregado a la lista de compras');
 	};
 
 	return (
@@ -98,7 +98,20 @@ function ProductPage({ params }) {
 					>
 						-
 					</button>
-					<span className={styles.quantity}>{cantidad}</span>
+					<input
+						type='text'
+						value={cantidad}
+						onChange={handleCantidadChange}
+						className={styles.quantityInput}
+						style={{
+							width: '50px',
+							textAlign: 'center',
+							border: '1px solid #ccc',
+							borderRadius: '5px',
+							padding: '5px',
+							margin: '0 5px',
+						}}
+					/>
 					<button
 						className={styles.incrementButton}
 						onClick={incrementarCantidad}

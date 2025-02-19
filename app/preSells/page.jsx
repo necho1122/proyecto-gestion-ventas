@@ -9,7 +9,7 @@ import { HomeIcon } from '@/components/Icons';
 function ListaCompras() {
 	const { listaCompras, eliminarProducto, limpiarLista } = useListaCompras();
 	const [stock, setStock] = useState([]);
-	const [tasa, setTasa] = useState(0); // Estado para la tasa de cambio
+	const [tasa, setTasa] = useState(''); // Estado para la tasa de cambio
 
 	// Obtener la lista de inventario desde Firestore
 	const obtenerStock = async () => {

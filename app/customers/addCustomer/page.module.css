@@ -139,3 +139,11 @@ input:checked+label .switch::before
     left: 22px;
     /* Mueve la bolita hacia la derecha */
 }
+
+.homeLink
+{
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

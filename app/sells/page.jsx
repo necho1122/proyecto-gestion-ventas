@@ -7,6 +7,7 @@ import { HomeIcon } from '@/components/Icons';
 
 function Page() {
 	const [ventas, setVentas] = useState([]); // Estado para almacenar las ventas
+	const [busqueda, setBusqueda] = useState(''); // Estado para la búsqueda
 
 	// Obtener ventas desde la API
 	const obtenerVentas = async () => {
@@ -14,7 +15,13 @@ function Page() {
 			const response = await fetch('/api/getSellsData', { method: 'GET' });
 			if (!response.ok) throw new Error('Error al obtener las ventas');
 			const data = await response.json();
-			setVentas(data); // Actualizar el estado con los datos obtenidos
+
+			// Ordenar por fecha (más reciente primero)
+			const ventasOrdenadas = data.sort(
+				(a, b) => new Date(b.fecha) - new Date(a.fecha)
+			);
+
+			setVentas(ventasOrdenadas);
 		} catch (error) {
 			console.error(error.message);
 		}
@@ -26,26 +33,48 @@ function Page() {
 
 	// Calcular el monto total de cada venta (sumar precios totales de los productos)
 	const calcularMontoTotal = (productos) => {
-		if (!Array.isArray(productos)) {
-			console.warn('Productos no es un array:', productos);
-			return 0; // Retornar 0 si productos no es un array
-		}
+		if (!Array.isArray(productos)) return 0;
 		return productos.reduce((total, producto) => {
-			// Convertir precioTotal a número antes de sumarlo
 			const precioTotal = parseFloat(producto.precioTotal) || 0;
 			return total + precioTotal;
 		}, 0);
 	};
 
+	const ventasFiltradas = ventas.filter((venta) =>
+		venta.id_factura.toString().includes(busqueda.trim())
+	);
+
 	return (
 		<div className={styles.container}>
-			<Link href='/home'>
-				<HomeIcon />
+			<Link
+				href='/home'
+				style={{ display: 'flex', alignItems: 'center' }}
+			>
+				<HomeIcon /> <p style={{ marginLeft: '5px' }}>Ir a inicio</p>
 			</Link>
 			<h1 className={styles.heading}>Control de Facturación</h1>
+
 			<Link href='/sells/extracto-ventas'>
 				<button className={styles.actionButton}>Ver Extracto de Ventas</button>
 			</Link>
+
+			{/* Buscador de facturas */}
+			<input
+				type='text'
+				placeholder='Buscar por ID de factura...'
+				value={busqueda}
+				onChange={(e) => setBusqueda(e.target.value)}
+				className={styles.searchInput}
+				style={{
+					display: 'block',
+					padding: '10px',
+					margin: '10px 0',
+					borderRadius: '5px',
+					border: '1px solid #ccc',
+					fontSize: '16px',
+				}}
+			/>
+
 			<table className={styles.table}>
 				<thead>
 					<tr>
@@ -56,16 +85,13 @@ function Page() {
 					</tr>
 				</thead>
 				<tbody>
-					{ventas.map((venta) => {
-						// Convertir la fecha y hora a formato legible
+					{ventasFiltradas.map((venta) => {
 						const fechaFormateada = new Date(venta.fecha).toLocaleString();
-
 						return (
 							<tr key={venta.id}>
-								<td>{venta.id_factura}</td> {/* Mostrar el ID de la compra */}
-								<td>{fechaFormateada}</td> {/* Fecha y hora */}
-								<td>${calcularMontoTotal(venta.productos).toFixed(2)}</td>{' '}
-								{/* Monto total */}
+								<td>{venta.id_factura}</td>
+								<td>{fechaFormateada}</td>
+								<td>${calcularMontoTotal(venta.productos).toFixed(2)}</td>
 								<td>
 									<Link href={`/sells/${venta.id}`}>
 										<button className={styles.actionButton}>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { HomeIcon } from '@/components/Icons';
 
 function FormularioProveedor() {
 	const [formData, setFormData] = useState({
@@ -30,15 +31,25 @@ function FormularioProveedor() {
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 
+		let newValue = value;
+
+		// Si el input es "nombre", restringimos a solo letras y espacios
+		if (name === 'nombre') {
+			newValue = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+		}
+
 		// Si el campo pertenece a la dirección, actualizarlo dentro del objeto direccion
 		if (name.startsWith('direccion.')) {
 			const field = name.split('.')[1]; // Extraer la clave del objeto direccion
 			setFormData((prevState) => ({
 				...prevState,
-				direccion: { ...prevState.direccion, [field]: value },
+				direccion: { ...prevState.direccion, [field]: newValue },
 			}));
 		} else {
-			setFormData({ ...formData, [name]: value });
+			setFormData((prevData) => ({
+				...prevData,
+				[name]: newValue, // Asignamos el valor filtrado
+			}));
 		}
 	};
 
@@ -74,6 +85,19 @@ function FormularioProveedor() {
 
 	return (
 		<div className={styles.formContainer}>
+			<Link
+				href='/home'
+				style={{
+					textDecoration: 'none',
+					color: 'inherit',
+					display: 'flex',
+					alignItems: 'center',
+					marginBottom: '30px',
+				}}
+			>
+				<HomeIcon />
+				<p style={{ marginLeft: '10px' }}>Volver a Inicio</p>
+			</Link>
 			<h1 className={styles.title}>Agregar Proveedor</h1>
 			<form onSubmit={handleSubmit}>
 				<h3>Proveedor:</h3>

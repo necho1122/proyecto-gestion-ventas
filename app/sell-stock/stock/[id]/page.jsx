@@ -2,8 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import styles from './page.module.css';
+import Link from 'next/link';
+import { HomeIcon } from '@/components/Icons';
 
 async function obtenerProducto(id) {
+	if (!id) return console.error('ID de producto no válido');
+
 	try {
 		const response = await fetch(`/api/getProduct?id=${id}`);
 		if (!response.ok) {
@@ -42,21 +46,28 @@ async function editarProducto(id, producto) {
 }
 
 function EditProduct({ params }) {
-	const { id } = params; // Accede al id del producto desde el enrutamiento dinámico
+	const { id } = params;
+
 	const [producto, setProducto] = useState({
 		producto: '',
 		cantidad: '',
 		precioUnitario: '',
+		codigo: '',
+		proveedor: '',
 	});
+
+	const [ventas, setVentas] = useState([]);
 
 	useEffect(() => {
 		if (id) {
 			obtenerProducto(id)
 				.then((data) => {
 					setProducto({
-						producto: data.producto,
-						cantidad: data.cantidad,
-						precioUnitario: data.precioUnitario,
+						producto: data.producto || '',
+						cantidad: data.cantidad || '',
+						precioUnitario: data.precioUnitario || '',
+						codigo: data.codigo || '',
+						proveedor: data.proveedor || '',
 					});
 				})
 				.catch((error) => {
@@ -65,65 +76,98 @@ function EditProduct({ params }) {
 		}
 	}, [id]);
 
+	useEffect(() => {
+		const obtenerVentas = async () => {
+			try {
+				const response = await fetch('/api/getStocksData');
+				if (!response.ok) throw new Error('Error al obtener las ventas');
+				const data = await response.json();
+				setVentas(data);
+			} catch (error) {
+				console.error('Error al cargar ventas:', error.message);
+			}
+		};
+		obtenerVentas();
+	}, []);
+
 	const handleChange = (e) => {
-		const { id, value } = e.target;
+		const { name, value } = e.target;
 		setProducto((prevProducto) => ({
 			...prevProducto,
-			[id]: value,
+			[name]: value,
 		}));
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (!producto.producto || !producto.cantidad || !producto.precioUnitario) {
+		if (Object.values(producto).some((value) => !value)) {
 			alert('Por favor, completa todos los campos.');
 			return;
 		}
 
 		try {
-			await editarProducto(id, producto); // Editar producto en Firestore
+			await editarProducto(id, producto);
 			alert('Producto actualizado exitosamente');
 		} catch (error) {
 			alert('Error al actualizar el producto');
 		}
 	};
 
+	const ventaEncontrada = ventas.find((venta) => venta.id === id) || {};
+
 	return (
 		<div className={styles.container}>
+			<Link
+				href='/home'
+				style={{
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'flex-start',
+					marginBottom: '1rem',
+				}}
+			>
+				<HomeIcon /> Ir a inicio
+			</Link>
 			<h1>Editar Producto</h1>
 			<form onSubmit={handleSubmit}>
-				<div className={styles.formGroup}>
-					<label htmlFor='producto'>Producto:</label>
-					<input
-						type='text'
-						id='producto'
-						value={producto.producto}
-						onChange={handleChange}
-						required
-					/>
-				</div>
-				<div className={styles.formGroup}>
-					<label htmlFor='cantidad'>Cantidad:</label>
-					<input
-						type='number'
-						id='cantidad'
-						value={producto.cantidad}
-						onChange={handleChange}
-						required
-					/>
-				</div>
-				<div className={styles.formGroup}>
-					<label htmlFor='precioUnitario'>Precio Unitario:</label>
-					<input
-						type='number'
-						id='precioUnitario'
-						value={producto.precioUnitario}
-						onChange={handleChange}
-						required
-					/>
-				</div>
+				{['producto', 'cantidad', 'precioUnitario', 'codigo', 'proveedor'].map(
+					(field) => (
+						<div
+							className={styles.formGroup}
+							key={field}
+						>
+							<label htmlFor={field}>
+								{field.charAt(0).toUpperCase() + field.slice(1)}:
+							</label>
+							<input
+								type={
+									field === 'cantidad' || field === 'precioUnitario'
+										? 'number'
+										: 'text'
+								}
+								name={field}
+								value={producto[field]}
+								onChange={handleChange}
+								required
+								placeholder={ventaEncontrada[field] || `Sin ${field}`}
+							/>
+						</div>
+					)
+				)}
 				<button type='submit'>Actualizar Producto</button>
 			</form>
+			<Link
+				href='/sell-stock/stock'
+				style={{
+					marginTop: '1rem',
+					marginBottom: '1rem',
+					display: 'block',
+					textAlign: 'center',
+					color: '#1a73e8',
+				}}
+			>
+				Volver a la lista de inventario
+			</Link>
 		</div>
 	);
 }

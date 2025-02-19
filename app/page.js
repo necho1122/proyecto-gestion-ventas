@@ -26,8 +26,11 @@ export default function Login() {
 			const data = await response.json();
 			if (!response.ok) throw new Error(data.error);
 
+			// 🔥 Guardar token en cookies para persistencia
+			document.cookie = `token=${data.token}; path=/; secure; samesite=strict`;
+
 			setMessage('Inicio de sesión exitoso.');
-			router.push('/home'); // Redirigir a /home
+			router.push('/home'); // 🔥 Redirigir a /home tras el login
 		} catch (error) {
 			setMessage('Usuario o contraseña incorrectos.');
 		}

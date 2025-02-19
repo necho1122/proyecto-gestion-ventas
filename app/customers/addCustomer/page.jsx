@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
+import { HomeIcon } from '@/components/Icons';
 
 function AddCustomerForm() {
 	const [formData, setFormData] = useState({
@@ -25,9 +26,16 @@ function AddCustomerForm() {
 
 	const handleChange = (e) => {
 		const { id, value } = e.target;
+		let newValue = value;
+
+		// Restringir el campo "cliente" a solo letras y espacios
+		if (id === 'cliente') {
+			newValue = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+		}
+
 		setFormData((prevData) => ({
 			...prevData,
-			[id]: value,
+			[id]: newValue, // Asignamos el valor filtrado
 		}));
 	};
 
@@ -98,6 +106,17 @@ function AddCustomerForm() {
 
 	return (
 		<div className={styles.formContainer}>
+			<Link
+				href='/home'
+				style={{
+					textDecoration: 'none',
+					display: 'flex',
+					alignItems: 'center',
+					marginBottom: '30px',
+				}}
+			>
+				<HomeIcon /> <p style={{ marginLeft: '10px' }}>Ir a inicio</p>
+			</Link>
 			<h2 className={styles.title}>Agregar Nuevo Cliente</h2>
 			{message && <p className={styles.message}>{message}</p>}
 			<form

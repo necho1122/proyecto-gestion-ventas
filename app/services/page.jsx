@@ -24,8 +24,11 @@ function Page() {
 
 	return (
 		<div className={styles.serviceContainer}>
-			<Link href='/home'>
-				<HomeIcon />
+			<Link
+				href='/home'
+				style={{ display: 'flex', alignItems: 'center' }}
+			>
+				<HomeIcon /> <p style={{ marginLeft: '10px' }}>Ir a inicio</p>
 			</Link>
 			<h1>Servicios</h1>
 			<table className={styles.table}>

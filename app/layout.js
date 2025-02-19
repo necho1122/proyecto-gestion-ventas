@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import NavBar from '@/components/NavBar';
 import { ListaComprasProvider } from '@/context/sellsContext';
+import { AuthProvider } from '@/context/AuthContext'; // 🔥 Importa el AuthProvider
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -22,10 +23,14 @@ export default function RootLayout({ children }) {
 	return (
 		<html lang='en'>
 			<body className={`${geistSans.variable} ${geistMono.variable}`}>
-				<ListaComprasProvider>
-					<NavBar />
-					{children}
-				</ListaComprasProvider>
+				<AuthProvider>
+					{' '}
+					{/* 🔥 Envuelve la app en AuthProvider */}
+					<ListaComprasProvider>
+						<NavBar />
+						{children}
+					</ListaComprasProvider>
+				</AuthProvider>
 			</body>
 		</html>
 	);
