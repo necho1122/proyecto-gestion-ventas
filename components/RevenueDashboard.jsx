@@ -43,7 +43,7 @@ function RevenueDashboard() {
 			</span>
 			<Image
 				src='/slogan.jpeg'
-				alt='Grafico de barras'
+				alt='slogan'
 				width={250}
 				height={250}
 			/>
