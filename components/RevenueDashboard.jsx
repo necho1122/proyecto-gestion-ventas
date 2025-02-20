@@ -32,26 +32,20 @@ function RevenueDashboard() {
 
 	return (
 		<div className={styles.revenueDashboard}>
-			<Image
-				src='/logo_dos.jpeg'
-				alt='Logo software'
-				width={150}
-				height={150}
-			/>
 			<h2>Consolidado de Ventas</h2>
 			<span>
 				<p>
-					<strong>Fecha de corte:</strong> 2025/01/11
+					<strong>Fecha de corte:</strong> 2025/02/19
 				</p>
 				<p>
 					<strong>Total de ventas:</strong> $ {sumaPrecioTotal.toFixed(2)}
 				</p>
 			</span>
 			<Image
-				src='https://cdn-icons-png.flaticon.com/512/3281/3281306.png'
+				src='/slogan.jpeg'
 				alt='Grafico de barras'
 				width={250}
-				height={220}
+				height={250}
 			/>
 		</div>
 	);
