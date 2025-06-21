@@ -3,10 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import styles from './page.module.css';
-import { useAuth } from '@/context/AuthContext'; // 🔥 Importa el contexto de autenticación
+import { useAuth } from '@/context/AuthContext';
 
 function Page() {
-	const { logout } = useAuth(); // 🔥 Usa la función de logout del contexto
+	const { logout } = useAuth();
 
 	return (
 		<div className={styles.container}>
